@@ -1,0 +1,66 @@
+.app-container {
+    background-color: #080808; 
+    min-height: 100vh; 
+}
+
+.auth-form-container {
+    width: 400px; 
+    height: 450px; 
+    margin: 0 auto;
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    background-color: #f9f9f9;
+    position: absolute;
+    top: 50%; 
+    left: 50%; 
+    transform: translate(-50%, -50%); 
+    color:#2de910;
+}
+
+.auth-form-container h2 {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.login-form label {
+    display: block;
+    margin-bottom: 5px;
+}
+
+.login-form input {
+    width: 100%;
+    padding: 8px;
+    margin-bottom: 15px;
+    border-radius: 3px;
+    border: 1px solid #ccc;
+}
+
+.login-form button {
+    width: 100%;
+    padding: 10px;
+    border: none;
+    border-radius: 3px;
+    background-color: #2de910;
+    color: #fff;
+    cursor: pointer;
+}
+
+.login-form button:hover {
+    background-color:#2de910;
+}
+
+.link-btn {
+    width: 100%;
+    padding: 10px;
+    border: none;
+    border-radius: 3px;
+    background-color: transparent;
+    color: #2de910;
+    cursor: pointer;
+    text-align: center;
+}
+
+.link-btn:hover {
+    text-decoration: underline;
+}

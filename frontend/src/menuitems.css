@@ -1,0 +1,39 @@
+.menui{
+    background-color: #080808;
+  color:white;
+}
+.menuitems {
+    display: flex; 
+    justify-content: center; 
+    align-items: center;
+   
+  }
+  .container{
+    margin-top: 5%;
+   
+  }
+  .a {
+    width: 300px; 
+    height: auto; 
+  }
+  .foot {
+    height: 100px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color:  #2de910;
+}
+
+.foot button {
+    width: 150px;
+    height: 50px;
+    color: white;
+    background-color: black;
+
+}
+
+  
+  
+  
+  
+  
