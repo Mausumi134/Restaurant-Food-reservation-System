@@ -7,8 +7,7 @@ import { errorMiddleware } from "./error/error.js";
 import reservationRouter from "./routes/reservationRoute.js";
 import loginRouter from "./routes/loginRoute.js";
 import registerRouter from "./routes/registerRoute.js"; 
-import {disableReactDevTools} from '@fvilers/disable-react-devtools'
-if(process.env.NODE_ENV==='production')disableReactDevTools()
+
 const app = express();
 app.use(cors({ credentials: true, origin: true }));
 dotenv.config({ path: "./config/config.env" });
