@@ -1,48 +1,113 @@
-Restaurant Food Reservation System
-The Restaurant Food Reservation System is a comprehensive web application designed to streamline the process of reserving seats and ordering food in restaurants. It is built using Node.js, Express.js, MongoDB, and React.js, offering a modern and efficient solution for restaurant management and customer service.
+# 🍽️ Restaurant Food Reservation System
 
-**Key Features:**
+The **Restaurant Food Reservation System** is a full-stack web application that allows users to browse restaurant menus, make table reservations, and pre-order food. It’s designed to streamline the dining experience for customers and improve operational efficiency for restaurant owners.
 
-1. **Seat Reservation:** Customers can easily browse available seats based on date, time, and party size, and reserve seats for their desired dining experience.
+---
 
-2. **Menu Exploration:** The system provides an interactive menu where customers can explore the restaurant's offerings, view dishes, prices, and descriptions, and make informed decisions about their orders.
+## 🚀 Features
 
-3. **Online Ordering:** Customers have the convenience of placing their food orders online, either in advance while making a reservation or during their dining experience, reducing wait times and minimizing errors.
+- 🏨 Browse available restaurants
+- 📅 Make real-time table reservations
+- 🍕 Pre-order food before arrival
+- 🧾 View menus with pricing and dish details
+- 👤 User authentication 
 
-4. **Real-time Updates:** The system offers real-time updates on seat availability, reservation status, and order processing, allowing restaurant staff to manage operations efficiently and provide timely service to customers.
 
-5. **Customer Management:** A comprehensive customer management system stores customer information, preferences, and order history, enabling personalized service and tailored recommendations.
+---
 
-6. **Administration Dashboard:** Restaurant managers have access to a centralized dashboard where they can manage reservations, update menus, track orders, and analyze performance metrics, empowering data-driven decision-making and operational optimization.
+## 🛠️ Tech Stack
 
-**Technologies Used:**
+### Frontend
+- **React.js**
+- **React Router**
+- **Axios**
 
-- **Node.js:** A powerful server-side JavaScript runtime environment for building scalable and high-performance web applications.
-- **Express.js:** A minimalist web framework for Node.js that simplifies the process of building web applications and APIs.
-- **MongoDB:** A flexible and scalable NoSQL database solution that stores data in JSON-like documents, providing high availability and horizontal scalability.
-- **React.js:** A popular JavaScript library for building user interfaces, enabling the creation of interactive and dynamic front-end components.
+### Backend
+- **Node.js**
+- **Express.js**
+- **Mongoose** for MongoDB integration
 
-**Usage:**
+### Database
+- **MongoDB Atlas**
 
-To run the Restaurant Food Reservation System locally:
 
-1. Clone the repository to your local machine.
-2. Install dependencies using `npm install`.
-3. Start the server using `npm start`.
-4. Access the application in your web browser at `http://localhost:3000`.
+## ⚙️ Installation & Setup
 
-**Contributing:**
+### 1. Clone the repository
 
-Contributions are welcome! If you have any suggestions, feature requests, or bug reports, please open an issue or submit a pull request on GitHub.
+```bash
+git clone https://github.com/Mausumi134/Restaurant-Food-reservation-System.git
+cd Restaurant Food reservation System
+```
 
-**License:**
+### 2. Backend Setup
 
-This project is licensed under the [MIT License](LICENSE). Feel free to use and modify it according to your needs.
+```bash
+cd backend
+npm install
+```
 
-**Acknowledgements:**
+Create a `.env` file in the `server` directory:
 
-- Special thanks to the developers and contributors of Node.js, Express.js, MongoDB, and React.js for their fantastic tools and frameworks.
+```env
+PORT=3000
+MONGO_URI=your_mongodb_connection
+```
 
-**About:**
+Start the server:
 
-This project was created by Mausumi Ghadei as a part of Restaurant reservation system. Connect with me on [LinkedIn](https://www.linkedin.com/in/mausumi-ghadei-006466229/) for more information or collaboration opportunities.
+```bash
+npm start
+```
+
+### 3. Frontend Setup
+
+```bash
+cd ../frontend
+npm install
+npm run dev
+```
+
+---
+
+## 🔒 Authentication
+
+- **Customers** can sign up, login, book tables, and pre-order
+
+---
+
+## 📸 Screenshots
+
+![Screenshot 2024-04-26 104640](https://github.com/user-attachments/assets/9e37f1ee-dd17-4565-a762-045f4923490d)
+
+
+![Screenshot 2024-04-16 223604](https://github.com/user-attachments/assets/5890023f-b639-4325-b6aa-33ba8d259995)
+
+---
+
+## ✨ Future Enhancements
+
+- 💳 Online payment integration
+- 📱 Mobile app version
+- 📊 Reservation analytics dashboard for admins
+- 📩 Email/SMS confirmation for bookings
+
+---
+
+## 🤝 Contributing
+
+Feel free to fork the repo and contribute via Pull Requests. For major changes, please open an issue first to discuss what you’d like to change.
+
+---
+
+## 📜 License
+
+This project is licensed under the MIT License.
+
+---
+
+## 👨‍🍳 Made with ❤️ by  
+**Mausumi Ghadei**  
+[LinkedIn](https://www.linkedin.com/in/mausumi-ghadei-006466229/) • [GitHub](https://github.com/Mausumi134/)
+
+---
