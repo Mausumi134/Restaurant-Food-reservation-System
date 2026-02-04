@@ -26,7 +26,8 @@ const Menuitems = () => {
 
   const fetchMenuItems = async () => {
     try {
-      const response = await axios.get('http://localhost:3000/api/v1/menu');
+      const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:3000';
+      const response = await axios.get(`${API_BASE_URL}/api/v1/menu`);
       const items = response.data.menuItems;
       setMenuItems(items);
       

@@ -31,8 +31,9 @@ const Reservation = () => {
   const fetchAvailableTables = async () => {
     try {
       setLoadingTables(true);
+      const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:3000';
       const response = await axios.get(
-        `http://localhost:3000/api/v1/tables?date=${date}&time=${time}&partySize=${partySize}`
+        `${API_BASE_URL}/api/v1/tables?date=${date}&time=${time}&partySize=${partySize}`
       );
       setAvailableTables(response.data.tables);
     } catch (error) {
@@ -65,8 +66,9 @@ const Reservation = () => {
         occasion: occasion || undefined
       };
 
+      const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:3000';
       const { data } = await axios.post(
-        "http://localhost:3000/api/v1/reservation/send",
+        `${API_BASE_URL}/api/v1/reservation/send`,
         reservationData,
         {
           headers: {

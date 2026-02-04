@@ -67,7 +67,8 @@ const Checkout = () => {
       console.log('Cart items:', cartItems);
 
       // Create order
-      const response = await axios.post('http://localhost:3000/api/v1/orders', orderData);
+      const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:3000';
+      const response = await axios.post(`${API_BASE_URL}/api/v1/orders`, orderData);
       
       if (response.data.success) {
         clearCart();

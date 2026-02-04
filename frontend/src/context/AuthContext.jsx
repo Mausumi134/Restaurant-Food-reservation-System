@@ -4,6 +4,9 @@ import toast from 'react-hot-toast';
 
 const AuthContext = createContext();
 
+// Get API URL from environment variable
+const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:3000';
+
 export const useAuth = () => {
   const context = useContext(AuthContext);
   if (!context) {
@@ -49,7 +52,7 @@ export const AuthProvider = ({ children }) => {
 
   const login = async (email, password) => {
     try {
-      const response = await axios.post('http://localhost:3000/api/v1/auth/login', {
+      const response = await axios.post(`${API_BASE_URL}/api/v1/auth/login`, {
         email,
         password
       });
@@ -72,7 +75,7 @@ export const AuthProvider = ({ children }) => {
 
   const register = async (userData) => {
     try {
-      const response = await axios.post('http://localhost:3000/api/v1/auth/register', userData);
+      const response = await axios.post(`${API_BASE_URL}/api/v1/auth/register`, userData);
       
       const { token: newToken, user: newUser } = response.data;
       
@@ -94,7 +97,7 @@ export const AuthProvider = ({ children }) => {
     try {
       // Call logout API to invalidate token on server
       if (token) {
-        await axios.post('http://localhost:3000/api/v1/auth/logout');
+        await axios.post(`${API_BASE_URL}/api/v1/auth/logout`);
       }
     } catch (error) {
       console.error('Logout API error:', error);
