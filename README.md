@@ -1,43 +1,30 @@
-# 🍽️ Complete Restaurant Food Ordering & Reservation System
+# 🍽️ FOODLICKS - Single Restaurant System
 
-A full-stack restaurant platform with ordering, delivery, payments, and reservation management.
+A complete single restaurant platform with ordering, table reservations, delivery tracking, and customer management.
 
 ## 🚀 **Features**
 
 ### **Customer Features**
-- 🔐 User authentication with JWT
-- 🏪 Browse restaurants by location, cuisine, rating
-- 🍽️ Dynamic menu with categories and filters
+- 🔐 Customer authentication with JWT (30-min session timeout)
+- 🍽️ Browse restaurant menu with categories and filters
 - 🛒 Shopping cart with special instructions
 - 📦 Order placement (delivery/pickup/dine-in)
 - 💳 Payment integration (Stripe ready)
-- 📱 Order tracking and history
-- 📅 Table reservations
-- ⭐ Reviews and ratings
-
-### **Restaurant Owner Features**
-- 🏢 Restaurant profile management
-- 📋 Menu item management
-- 📊 Order management dashboard
-- 📈 Sales analytics
-- 🔄 Real-time order status updates
-- 💰 Revenue tracking
-
-### **Admin Features**
-- 👥 User management
-- 🏪 Restaurant management
-- 📦 Order oversight
-- 💸 Refund processing
+- 📱 Real-time order tracking and history
+- 📅 Table reservations with seat selection
+- 🚚 Live delivery tracking with driver information
+- 📍 Multiple delivery addresses management
+- 🔄 Automatic logout with confirmation dialogs
 
 ## 🛠️ **Tech Stack**
 
 ### **Backend**
 - Node.js + Express.js
 - MongoDB + Mongoose
-- JWT Authentication
+- JWT Authentication (30-min sessions)
 - Bcrypt password hashing
 - Stripe payment integration
-- Socket.io (ready for real-time)
+- Real-time delivery tracking
 
 ### **Frontend**
 - React.js 18
@@ -46,6 +33,7 @@ A full-stack restaurant platform with ordering, delivery, payments, and reservat
 - Bootstrap 5
 - Axios for API calls
 - React Hot Toast
+- Session timeout management
 
 ## 📦 **Installation & Setup**
 
@@ -107,9 +95,12 @@ npm run dev
 
 | Role | Email | Password |
 |------|-------|----------|
-| Customer | john@example.com | password123 |
-| Restaurant Owner | jane@restaurant.com | password123 |
-| Admin | admin@restaurant.com | password123 |
+| Customer 1 | john@example.com | password123 |
+| Customer 2 | jane@example.com | password123 |
+| Customer 3 | mike@example.com | password123 |
+| Customer 4 | sarah@example.com | password123 |
+
+**Note**: This is a single restaurant system - all users are customers only.
 
 ## 📱 **Access URLs**
 
@@ -120,24 +111,18 @@ npm run dev
 ## 🗂️ **API Endpoints**
 
 ### **Authentication**
-- `POST /api/v1/auth/register` - User registration
-- `POST /api/v1/auth/login` - User login
-
-### **Restaurants**
-- `GET /api/v1/restaurants` - List restaurants
-- `GET /api/v1/restaurants/:id` - Get restaurant details
-- `POST /api/v1/restaurants` - Create restaurant (owner)
+- `POST /api/v1/auth/register` - Customer registration
+- `POST /api/v1/auth/login` - Customer login
+- `POST /api/v1/auth/logout` - Customer logout
 
 ### **Menu**
-- `GET /api/v1/menu` - List menu items
-- `GET /api/v1/menu/restaurant/:id` - Get restaurant menu
-- `POST /api/v1/menu` - Create menu item (owner)
+- `GET /api/v1/menu` - List all menu items
+- `GET /api/v1/menu/:id` - Get menu item details
 
 ### **Orders**
 - `POST /api/v1/orders` - Create order
-- `GET /api/v1/orders/my-orders` - User's orders
+- `GET /api/v1/orders/my-orders` - Customer's orders
 - `GET /api/v1/orders/:id` - Order details
-- `PATCH /api/v1/orders/:id/status` - Update status (owner)
 
 ### **Payments**
 - `POST /api/v1/payments/create-intent` - Create payment
@@ -145,7 +130,16 @@ npm run dev
 - `GET /api/v1/payments/history` - Payment history
 
 ### **Reservations**
-- `POST /api/v1/reservation/send` - Make reservation
+- `POST /api/v1/reservation/send` - Make table reservation
+- `GET /api/v1/reservation/my-reservations` - Customer's reservations
+
+### **Tables**
+- `GET /api/v1/tables` - List available tables
+- `GET /api/v1/tables/:id` - Get table details
+
+### **Delivery Tracking**
+- `GET /api/v1/delivery/track/:orderId` - Track delivery status
+- `PUT /api/v1/delivery/:orderId` - Update delivery status
 
 ## 🏗️ **Project Structure**
 
@@ -172,35 +166,41 @@ Restaurant-Food-reservation-System/
 
 ## 🔄 **Order Flow**
 
-1. **Customer** browses restaurants and adds items to cart
-2. **Customer** proceeds to checkout and places order
-3. **Restaurant** receives order notification
-4. **Restaurant** confirms and updates order status
-5. **Customer** receives real-time status updates
-6. **Order** progresses: Confirmed → Preparing → Ready → Delivered
+1. **Customer** browses FOODLICKS menu and adds items to cart
+2. **Customer** proceeds to checkout and places order (delivery/pickup/dine-in)
+3. **System** automatically processes and confirms order
+4. **Order** progresses: Confirmed → Preparing → Ready → Out for Delivery → Delivered
+5. **Customer** receives real-time status updates and can track delivery
+6. **Delivery tracking** shows driver info, location, and estimated delivery time
 
-## 🎯 **User Roles & Permissions**
+## 🎯 **System Features**
 
-### **Customer**
-- Browse restaurants and menus
-- Place orders and make reservations
-- Track order status
-- View order history
-- Leave reviews
+### **Single Restaurant System**
+- Focused on FOODLICKS restaurant operations
+- Customer-only authentication (no admin/owner roles)
+- Streamlined menu management
+- Integrated table reservation system
+- Real-time delivery tracking
 
-### **Restaurant Owner**
-- Manage restaurant profile
-- Add/edit menu items
-- Process incoming orders
-- Update order status
-- View sales analytics
+### **Table Reservation System**
+- 6 different table types (2-8 capacity)
+- Window, indoor, outdoor, bar, and private dining options
+- Real-time availability checking
+- Special amenities (booth, high chairs, etc.)
 
-### **Admin**
-- Full system access
-- User management
-- Restaurant oversight
-- Order management
-- Refund processing
+### **Delivery Tracking**
+- 5-stage delivery process
+- Driver information and contact details
+- Real-time location updates
+- Estimated delivery times
+- Mobile-friendly tracking interface
+
+### **Customer Management**
+- Secure JWT authentication with 30-minute sessions
+- Multiple delivery addresses
+- Order history and tracking
+- Reservation history
+- Automatic session timeout with warnings
 
 ## 🚀 **Deployment Ready**
 
@@ -228,23 +228,34 @@ npm run preview      # Preview production build
 ## 📊 **Sample Data**
 
 The seeder creates:
-- 3 users (customer, restaurant owner, admin)
-- 2 restaurants with different cuisines
-- 8 menu items across categories
-- Complete restaurant profiles with operating hours
+- 4 customer users with different profiles
+- 6 tables with varying capacities and locations
+- 10 menu items across 5 categories (Breakfast, Lunch, Dinner, Beverages, Desserts, Appetizers)
+- Complete table setup with amenities and pricing
+- Sample delivery tracking data
+
+### **Restaurant Information**
+- **Name**: FOODLICKS
+- **Location**: Downtown City
+- **Cuisine**: Multi-cuisine restaurant
+- **Operating Hours**: 24/7 service
+- **Table Capacity**: 2-8 people per table
+- **Delivery**: Available with real-time tracking
 
 ## 🔮 **Future Enhancements**
 
-- Real-time order tracking with Socket.io
-- Push notifications
+- Real-time order notifications
+- Push notifications for order updates
 - Mobile app (React Native)
-- Advanced analytics dashboard
+- Advanced customer analytics
 - Multi-language support
-- Loyalty program
-- Driver tracking for delivery
+- Loyalty program with points
+- GPS-based delivery tracking
 - Inventory management
 - Email notifications
 - Social media integration
+- Customer reviews and ratings
+- Promotional codes and discounts
 
 ## 🤝 **Contributing**
 
@@ -262,9 +273,19 @@ This project is licensed under the MIT License.
 
 For support and questions:
 - Create an issue in the repository
-- Check the API documentation
-- Review the demo credentials above
+- Check the API documentation above
+- Review the demo credentials for testing
+- Use the delivery tracking system for order updates
+
+### **Key Features to Test**
+1. **Customer Registration/Login** - Use demo credentials or create new account
+2. **Menu Browsing** - Browse 10+ menu items across categories
+3. **Order Placement** - Test delivery, pickup, and dine-in options
+4. **Table Reservations** - Reserve tables with different capacities
+5. **Delivery Tracking** - Track orders with real-time updates
+6. **Order History** - View past orders and their status
+7. **Session Management** - Test 30-minute auto-logout feature
 
 ---
 
-**🎉 Enjoy your complete restaurant management system!**
+**🎉 Enjoy FOODLICKS - Your Complete Single Restaurant Experience!**
