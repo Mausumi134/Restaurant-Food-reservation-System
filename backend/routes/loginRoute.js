@@ -1,7 +1,7 @@
-// routes/loginRoute.js
-
 import express from "express";
 import User from "../models/User.js";
+import { generateToken } from "../middleware/auth.js";
+import ErrorHandler from "../error/error.js";
 
 const router = express.Router();
 
@@ -9,22 +9,49 @@ router.post("/", async (req, res, next) => {
   const { email, password } = req.body;
 
   try {
-    // Find the user with the provided email
-    const user = await User.findOne({ email });
+    // Validate input
+    if (!email || !password) {
+      return next(new ErrorHandler("Please provide email and password", 400));
+    }
+
+    // Find user and include password for comparison
+    const user = await User.findOne({ email }).select('+password');
 
     if (!user) {
-      throw new Error("This email is not registered!");
+      return next(new ErrorHandler("Invalid email or password", 401));
     }
 
-    // Check if the password matches
-    if (user.password !== password) {
-      throw new Error("Wrong password!");
+    // Check if account is active
+    if (!user.isActive) {
+      return next(new ErrorHandler("Account is deactivated. Please contact support.", 401));
     }
 
-    // Login successful
-    res.status(200).json({ success: true, message: "Success!" });
+    // Compare password
+    const isPasswordValid = await user.comparePassword(password);
+    
+    if (!isPasswordValid) {
+      return next(new ErrorHandler("Invalid email or password", 401));
+    }
+
+    // Update last login
+    user.lastLogin = new Date();
+    await user.save();
+
+    // Generate token
+    const token = generateToken(user._id);
+
+    // Remove password from response
+    const userResponse = user.toObject();
+    delete userResponse.password;
+
+    res.status(200).json({
+      success: true,
+      message: "Login successful!",
+      token,
+      user: userResponse
+    });
   } catch (error) {
-    res.status(400).json({ success: false, message: error.message });
+    next(error);
   }
 });
 

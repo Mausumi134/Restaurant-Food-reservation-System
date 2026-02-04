@@ -1,36 +1,46 @@
-// Register.js
-
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import axios from "axios";
-import toast from "react-hot-toast";
+import { useAuth } from "../context/AuthContext";
 
 const Register = () => {
-  const [email, setEmail] = useState("");
-  const [username, setUsername] = useState("");
-  const [password, setPassword] = useState("");
-  const [passwordConf, setPasswordConf] = useState("");
+  const [formData, setFormData] = useState({
+    firstName: "",
+    lastName: "",
+    email: "",
+    username: "",
+    password: "",
+    passwordConf: "",
+    phone: ""
+  });
+  const [loading, setLoading] = useState(false);
+  const { register, isAuthenticated } = useAuth();
   const navigate = useNavigate();
+
+  // Redirect if already authenticated
+  React.useEffect(() => {
+    if (isAuthenticated) {
+      navigate("/home");
+    }
+  }, [isAuthenticated, navigate]);
+
+  const handleChange = (e) => {
+    setFormData({
+      ...formData,
+      [e.target.name]: e.target.value
+    });
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
-    try {
-      const response = await axios.post(
-        "http://localhost:3000/api/v1/register",
-        { email, username, password, passwordConf },
-        {
-          headers: {
-            "Content-Type": "application/json",
-          },
-        }
-      );
-
-      toast.success(response.data.message);
-      navigate("/");
-    } catch (error) {
-      toast.error(error.response.data.message);
+    setLoading(true);
+    
+    const result = await register(formData);
+    
+    if (result.success) {
+      navigate("/home");
     }
+    
+    setLoading(false);
   };
 
   return (
@@ -38,43 +48,85 @@ const Register = () => {
       <div className="auth-form-container">
         <h2>Register</h2>
         <form className="login-form" onSubmit={handleSubmit}>
+          <label htmlFor="firstName">First Name</label>
+          <input
+            value={formData.firstName}
+            onChange={handleChange}
+            type="text"
+            placeholder="John"
+            id="firstName"
+            name="firstName"
+            required
+          />
+          
+          <label htmlFor="lastName">Last Name</label>
+          <input
+            value={formData.lastName}
+            onChange={handleChange}
+            type="text"
+            placeholder="Doe"
+            id="lastName"
+            name="lastName"
+            required
+          />
+          
           <label htmlFor="email">Email</label>
           <input
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
+            value={formData.email}
+            onChange={handleChange}
             type="email"
             placeholder="youremail@gmail.com"
             id="email"
             name="email"
+            required
           />
+          
           <label htmlFor="username">Username</label>
           <input
-            value={username}
-            onChange={(e) => setUsername(e.target.value)}
+            value={formData.username}
+            onChange={handleChange}
             type="text"
-            placeholder="Your Username"
+            placeholder="johndoe"
             id="username"
             name="username"
+            required
           />
+          
+          <label htmlFor="phone">Phone (Optional)</label>
+          <input
+            value={formData.phone}
+            onChange={handleChange}
+            type="tel"
+            placeholder="+1234567890"
+            id="phone"
+            name="phone"
+          />
+          
           <label htmlFor="password">Password</label>
           <input
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
+            value={formData.password}
+            onChange={handleChange}
             type="password"
             placeholder="********"
             id="password"
             name="password"
+            required
           />
+          
           <label htmlFor="passwordConf">Confirm Password</label>
           <input
-            value={passwordConf}
-            onChange={(e) => setPasswordConf(e.target.value)}
+            value={formData.passwordConf}
+            onChange={handleChange}
             type="password"
             placeholder="********"
             id="passwordConf"
             name="passwordConf"
+            required
           />
-          <button type="submit">Register</button>
+          
+          <button type="submit" disabled={loading}>
+            {loading ? "Registering..." : "Register"}
+          </button>
         </form>
         <Link to={"/"}>
           <button className="link-btn">Already have an account? Login here.</button>

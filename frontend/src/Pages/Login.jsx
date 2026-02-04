@@ -1,32 +1,32 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import axios from "axios";
-import { HiOutlineArrowNarrowRight } from "react-icons/hi";
-import toast from "react-hot-toast";
+import { useAuth } from "../context/AuthContext";
 
 const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [loading, setLoading] = useState(false);
+  const { login, isAuthenticated } = useAuth();
   const navigate = useNavigate();
+
+  // Redirect if already authenticated
+  React.useEffect(() => {
+    if (isAuthenticated) {
+      navigate("/home");
+    }
+  }, [isAuthenticated, navigate]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    try {
-      const { data } = await axios.post(
-        "http://localhost:3000/api/v1/login",
-        { email, password },
-        {
-          headers: {
-            "Content-Type": "application/json",
-          },
-          withCredentials: true,
-        }
-      );
-      toast.success(data.message);
+    setLoading(true);
+    
+    const result = await login(email, password);
+    
+    if (result.success) {
       navigate("/home");
-    } catch (error) {
-      toast.error(error.response.data.message);
     }
+    
+    setLoading(false);
   };
 
   return (
@@ -41,7 +41,8 @@ const Login = () => {
             type="email" 
             placeholder="youremail@gmail.com" 
             id="email" 
-            name="email" 
+            name="email"
+            required
           />
           <label htmlFor="password">Password</label>
           <input 
@@ -50,15 +51,26 @@ const Login = () => {
             type="password" 
             placeholder="********" 
             id="password" 
-            name="password" 
+            name="password"
+            required
           />
-          <button type="submit">Log In</button>
+          <button type="submit" disabled={loading}>
+            {loading ? "Logging in..." : "Log In"}
+          </button>
         </form>
         <Link to={"/register"}>
           <button className="link-btn">
             Don't have an account? Register here.
           </button>
         </Link>
+        
+        <div className="demo-credentials" style={{ marginTop: '20px', padding: '15px', backgroundColor: '#f8f9fa', borderRadius: '5px' }}>
+          <h6>Demo Customer Credentials:</h6>
+          <p><strong>Customer 1:</strong> john@example.com / password123</p>
+          <p><strong>Customer 2:</strong> jane@example.com / password123</p>
+          <p><strong>Customer 3:</strong> mike@example.com / password123</p>
+          <p><strong>Customer 4:</strong> sarah@example.com / password123</p>
+        </div>
       </div>
     </div>
   );

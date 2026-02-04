@@ -10,7 +10,7 @@ import Footer from '../components/Footer'
 
 const Home = () => {
   return (
-    <>
+    <div style={{ paddingTop: '70px' }}>
       <HeroSection/>
       <About/>
       <Qualities/>
@@ -19,7 +19,7 @@ const Home = () => {
       <Team/>
       <Reservation/>
       <Footer/>
-    </>
+    </div>
   )
 }
 

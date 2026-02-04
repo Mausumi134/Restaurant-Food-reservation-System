@@ -1,236 +1,203 @@
-import React from "react";
-import { Link, useNavigate } from "react-router-dom";
+import React, { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
 import { HiOutlineArrowNarrowRight } from "react-icons/hi";
+import { FiSearch, FiFilter, FiShoppingCart } from "react-icons/fi";
+import axios from "axios";
+import { useCart } from "../context/CartContext";
+import toast from "react-hot-toast";
 import 'bootstrap/dist/css/bootstrap.css';
 
-
 const Menuitems = () => {
+  const [menuItems, setMenuItems] = useState([]);
+  const [filteredItems, setFilteredItems] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [selectedCategory, setSelectedCategory] = useState("All");
+  const [categories, setCategories] = useState([]);
+  const { addToCart } = useCart();
+
+  useEffect(() => {
+    fetchMenuItems();
+  }, []);
+
+  useEffect(() => {
+    filterItems();
+  }, [menuItems, searchTerm, selectedCategory]);
+
+  const fetchMenuItems = async () => {
+    try {
+      const response = await axios.get('http://localhost:3000/api/v1/menu');
+      const items = response.data.menuItems;
+      setMenuItems(items);
+      
+      // Extract unique categories
+      const uniqueCategories = ["All", ...new Set(items.map(item => item.category))];
+      setCategories(uniqueCategories);
+    } catch (error) {
+      console.error('Error fetching menu items:', error);
+      toast.error('Failed to load menu items');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const filterItems = () => {
+    let filtered = menuItems;
+
+    // Filter by search term
+    if (searchTerm) {
+      filtered = filtered.filter(item =>
+        item.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        item.description.toLowerCase().includes(searchTerm.toLowerCase())
+      );
+    }
+
+    // Filter by category
+    if (selectedCategory !== "All") {
+      filtered = filtered.filter(item => item.category === selectedCategory);
+    }
+
+    setFilteredItems(filtered);
+  };
+
+  const handleAddToCart = (item) => {
+    addToCart(item); // Pass the item directly, CartContext will handle the structure
+    toast.success(`${item.name} added to cart!`);
+  };
+
+  if (loading) {
     return (
-        <div className="menui">
-            <div className="menuitems">
-                <img className="logo" src="logo2.JPG" alt="logo" />
+      <div className="menui">
+        <div className="container mt-5 pt-5">
+          <div className="d-flex justify-content-center">
+            <div className="spinner-border" role="status">
+              <span className="visually-hidden">Loading...</span>
             </div>
-            <div className="container">
-                <div className="row">
-                    <div className="col-md-6">
-                        <div className="menu-item">
-                           
-                            <img className="a" src="item-6.jpeg" alt="logo" />
-                        </div>
-                    </div>
-                    <div className="col-md-6">
-                    <div className="menu-item">
-                           <h1>Lassi</h1>
-                           
-                          <p>At our restaurant, our Lassi is served in a tall glass, garnished with a dollop of fresh cream and a sprinkle of ground spices, such as cardamom or cumin. Each sip provides a delightful combination of creamy texture and refreshing taste, making it a perfect companion to spicy Indian dishes or as a standalone beverage to quench your thirst.</p>
-                          <p><price>$200</price></p>
-                       </div>
-
-                    </div>
-                </div>
-            </div>
-
-
-
-            <div class="container">
-    <div class="row">
-        <div class="col-md-6">
-            <div class="menu-item">
-                <img class="a" src="item-1.jpeg" alt="logo" />
-            </div>
+          </div>
         </div>
-        <div class="col-md-6">
-            <div class="menu-item">
-                <h1>Pancake</h1>
-                <p>Our fluffy pancakes are a delightful treat for breakfast or brunch. Served piping hot and topped with your choice of syrup, fresh fruits, or whipped cream, they are sure to satisfy your morning cravings. Whether you prefer traditional buttermilk pancakes or adventurous flavors like chocolate chip or blueberry, our pancakes are made to order and guaranteed to please your taste buds.</p>
-                <p><price>$300</price></p>
+      </div>
+    );
+  }
+
+  return (
+    <div className="menui">
+      {/* Header */}
+      <div className="menu-header">
+        <div className="container">
+          <div className="row align-items-center">
+            <div className="col-md-6">
+              <img className="logo" src="/logo2.JPG" alt="logo" />
+              <h1 className="menu-title">Our Menu</h1>
+              <p className="menu-subtitle">Discover our delicious selection of dishes</p>
             </div>
+          </div>
         </div>
-    </div>
-</div>
+      </div>
 
-
-
-<div className="container">
-    <div className="row">
-        <div className="col-md-6">
-            <div className="menu-item">
-                <img className="a" src="item-2.jpeg" alt="logo" />
+      {/* Filters */}
+      <div className="menu-filters">
+        <div className="container">
+          <div className="row">
+            <div className="col-md-6">
+              <div className="search-box">
+                <FiSearch className="search-icon" />
+                <input
+                  type="text"
+                  placeholder="Search menu items..."
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                  className="form-control"
+                />
+              </div>
             </div>
+            <div className="col-md-6">
+              <div className="category-filter">
+                <FiFilter className="filter-icon" />
+                <select
+                  value={selectedCategory}
+                  onChange={(e) => setSelectedCategory(e.target.value)}
+                  className="form-select"
+                >
+                  {categories.map(category => (
+                    <option key={category} value={category}>
+                      {category}
+                    </option>
+                  ))}
+                </select>
+              </div>
+            </div>
+          </div>
         </div>
-        <div className="col-md-6">
-            <div className="menu-item">
-                <h1>Burger French Fries Combo</h1>
-                <p>Indulge in our mouthwatering burger french fries combo, a classic favorite loved by all ages. Our juicy burger patties are grilled to perfection and served on a toasted bun with fresh lettuce, ripe tomatoes, and your choice of toppings. Pair it with a generous serving of crispy golden french fries for the ultimate satisfaction. This combo is perfect for a quick and satisfying meal any time of the day.</p>
-                <p><price>$500</price></p>
+      </div>
+
+      {/* Menu Items */}
+      <div className="menu-items-section">
+        <div className="container">
+          {filteredItems.length > 0 ? (
+            <div className="row">
+              {filteredItems.map((item) => (
+                <div key={item._id} className="col-lg-6 col-xl-4 mb-4">
+                  <div className="menu-item-card">
+                    <div className="item-image">
+                      <img src={item.image} alt={item.name} />
+                      {item.isNewItem && <span className="badge-new">New</span>}
+                      {item.isPopular && <span className="badge-popular">Popular</span>}
+                    </div>
+                    <div className="item-content">
+                      <div className="item-header">
+                        <h3>{item.name}</h3>
+                        <span className="price">${item.price}</span>
+                      </div>
+                      <p className="description">{item.description}</p>
+                      <div className="item-details">
+                        <span className="category">{item.category}</span>
+                        <span className="prep-time">{item.preparationTime} min</span>
+                      </div>
+                      <div className="item-tags">
+                        {item.isVegetarian && <span className="tag vegetarian">Vegetarian</span>}
+                        {item.isVegan && <span className="tag vegan">Vegan</span>}
+                        {item.spiceLevel !== 'Mild' && (
+                          <span className={`tag spice-${item.spiceLevel.toLowerCase()}`}>
+                            {item.spiceLevel}
+                          </span>
+                        )}
+                      </div>
+                      <button
+                        className="add-to-cart-btn"
+                        onClick={() => handleAddToCart(item)}
+                      >
+                        <FiShoppingCart className="me-2" />
+                        Add to Cart
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              ))}
             </div>
+          ) : (
+            <div className="no-items">
+              <h4>No items found</h4>
+              <p>Try adjusting your search or filter criteria</p>
+            </div>
+          )}
         </div>
-    </div>
-</div>
+      </div>
 
-
-
-
-            <div className="container">
-                <div className="row">
-                    <div className="col-md-6">
-                        <div className="menu-item">
-                           
-                            <img className="a" src="item-3.jpeg" alt="logo" />
-                        </div>
-                    </div>
-                    <div className="col-md-6">
-                    <div className="menu-item">
-                    <h1>Strawberry Shake</h1>
-                <p>Indulge in the creamy goodness of our Strawberry Shake. Made with fresh strawberries blended with rich, creamy ice cream, this shake is a delightful treat for strawberry lovers. Served ice-cold in a tall glass with whipped cream and a cherry on top, it's the perfect way to cool off and satisfy your sweet tooth.</p>
-                <p><price>$599</price></p>
-                       </div>
-
-                    </div>
-                </div>
-            </div>
-
-
-
-            <div className="container">
-                <div className="row">
-                    <div className="col-md-6">
-                        <div className="menu-item">
-                           
-                            <img className="a" src="item-4.jpeg" alt="logo" />
-                        </div>
-                    </div>
-                    <div className="col-md-6">
-                    <div className="menu-item">
-                    <h1>French Toast</h1>
-                <p>Enjoy a classic breakfast favorite with our French Toast. Slices of fluffy bread soaked in a rich egg custard mixture and grilled to golden perfection. Served with a dusting of powdered sugar and a side of maple syrup, our French Toast is the perfect combination of sweet and savory flavors. Start your day right with this timeless breakfast dish.</p>
-                <p><price>$899</price></p>
-                       </div>
-
-                    </div>
-                </div>
-            </div>
-
-
-
-            <div className="container">
-                <div className="row">
-                    <div className="col-md-6">
-                        <div className="menu-item">
-                           
-                            <img className="a" src="item-5.jpeg" alt="logo" />
-                        </div>
-                    </div>
-                    <div className="col-md-6">
-                    <div className="menu-item">
-                           <h1>VegBurger</h1>
-                           
-                          <p>At our restaurant, our Lassi is served in a tall glass, garnished with a dollop of fresh cream and a sprinkle of ground spices, such as cardamom or cumin. Each sip provides a delightful combination of creamy texture and refreshing taste, making it a perfect companion to spicy Indian dishes or as a standalone beverage to quench your thirst.</p>
-                          <p><price>$200</price></p>
-                       </div>
-
-                    </div>
-                </div>
-            </div>
-
-
-
-            <div className="container">
-                <div className="row">
-                    <div className="col-md-6">
-                        <div className="menu-item">
-                           
-                            <img className="a" src="item-7.jpeg" alt="logo" />
-                        </div>
-                    </div>
-                    <div className="col-md-6">
-                    <div className="menu-item">
-                           <h1>ChickenBurger</h1>
-                           
-                          <p>At our restaurant, our Lassi is served in a tall glass, garnished with a dollop of fresh cream and a sprinkle of ground spices, such as cardamom or cumin. Each sip provides a delightful combination of creamy texture and refreshing taste, making it a perfect companion to spicy Indian dishes or as a standalone beverage to quench your thirst.</p>
-                          <p><price>$200</price></p>
-                       </div>
-
-                    </div>
-                </div>
-            </div>
-
-            <div className="container">
-                <div className="row">
-                    <div className="col-md-6">
-                        <div className="menu-item">
-                           
-                            <img className="a" src="item-8.jpeg" alt="logo" />
-                        </div>
-                    </div>
-                    <div className="col-md-6">
-                    <div className="menu-item">
-                           <h1>PattiBurger</h1>
-                           
-                          <p>At our restaurant, our Lassi is served in a tall glass, garnished with a dollop of fresh cream and a sprinkle of ground spices, such as cardamom or cumin. Each sip provides a delightful combination of creamy texture and refreshing taste, making it a perfect companion to spicy Indian dishes or as a standalone beverage to quench your thirst.</p>
-                          <p><price>$200</price></p>
-                       </div>
-
-                    </div>
-                </div>
-            </div>
-
-
-            <div className="container">
-                <div className="row">
-                    <div className="col-md-6">
-                        <div className="menu-item">
-                           
-                            <img className="a" src="dinner2.png" alt="logo" />
-                        </div>
-                    </div>
-                    <div className="col-md-6">
-                    <div className="menu-item">
-                           <h1>toast</h1>
-                           
-                          <p>At our restaurant, our Lassi is served in a tall glass, garnished with a dollop of fresh cream and a sprinkle of ground spices, such as cardamom or cumin. Each sip provides a delightful combination of creamy texture and refreshing taste, making it a perfect companion to spicy Indian dishes or as a standalone beverage to quench your thirst.</p>
-                          <p><price>$200</price></p>
-                       </div>
-
-                    </div>
-                </div>
-            </div>
-
-
-            <div className="container">
-                <div className="row">
-                    <div className="col-md-6">
-                        <div className="menu-item">
-                           
-                            <img className="a" src="item-10.jpeg" alt="logo" />
-                        </div>
-                    </div>
-                    <div className="col-md-6">
-                    <div className="menu-item">
-                           <h1>Chicken</h1>
-                           
-                          <p>At our restaurant, our Lassi is served in a tall glass, garnished with a dollop of fresh cream and a sprinkle of ground spices, such as cardamom or cumin. Each sip provides a delightful combination of creamy texture and refreshing taste, making it a perfect companion to spicy Indian dishes or as a standalone beverage to quench your thirst.</p>
-                          <p><price>$200</price></p>
-                       </div>
-
-                    </div>
-                </div>
-            </div>
-
-            <div className="foot">
-          
-            <Link to={"/home"}>
-                <button>
-            Back to Home{" "}
-            <span>
-              <HiOutlineArrowNarrowRight />
-            </span>
+      {/* Footer */}
+      <div className="menu-footer">
+        <div className="container">
+          <Link to="/home">
+            <button className="back-btn">
+              Back to Home{" "}
+              <span>
+                <HiOutlineArrowNarrowRight />
+              </span>
             </button>
           </Link>
-            </div>
         </div>
-      
-    );
-}
+      </div>
+    </div>
+  );
+};
 
 export default Menuitems;
