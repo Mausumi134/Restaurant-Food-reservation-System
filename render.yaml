@@ -1,0 +1,42 @@
+services:
+  # Backend API Service
+  - type: web
+    name: foodlicks-backend
+    env: node
+    plan: free
+    buildCommand: cd backend && npm install
+    startCommand: cd backend && npm start
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 10000
+      - key: FRONTEND_URL
+        fromService:
+          type: web
+          name: foodlicks-frontend
+          property: url
+      - key: MONGO_URI
+        sync: false  # Set this in Render dashboard
+      - key: JWT_SECRET
+        generateValue: true
+      - key: JWT_EXPIRES_IN
+        value: 7d
+      - key: STRIPE_SECRET_KEY
+        sync: false  # Set this in Render dashboard
+      - key: STRIPE_PUBLISHABLE_KEY
+        sync: false  # Set this in Render dashboard
+    
+  # Frontend Static Site
+  - type: web
+    name: foodlicks-frontend
+    env: static
+    plan: free
+    buildCommand: cd frontend && npm install && npm run build
+    staticPublishPath: frontend/dist
+    envVars:
+      - key: VITE_API_URL
+        fromService:
+          type: web
+          name: foodlicks-backend
+          property: url

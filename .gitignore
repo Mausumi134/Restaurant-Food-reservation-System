@@ -8,6 +8,7 @@ yarn-error.log*
 # Production builds
 build/
 dist/
+frontend/dist/
 
 # Environment variables
 .env
@@ -15,6 +16,11 @@ dist/
 .env.development.local
 .env.test.local
 .env.production.local
+backend/config/config.env
+
+# Deployment
+deployment-info.json
+.render/
 
 # IDE
 .vscode/
